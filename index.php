@@ -20,19 +20,19 @@
                 <div class="columns">
                     <div class="column">
                         <label>Weather Location:</lable>
-                        <input type="text" class="input is-rounded is-normal">
+                        <input type="text" class="input is-rounded is-normal" v-model='location' @change='setLocation' required>
                     </div>
                     <div class="column" >
                         <label type="text">Start Date:</lable>
-                        <input type="text" class="input is-rounded is-normal"> 
+                        <input type="date" class="input is-rounded is-normal" v-model='startDate' @change='setStartDate'> 
                     </div>
                     <div class="column">
                         <label>End Date:</lable>
-                        <input type="text" class="input is-rounded is-normal">
+                        <input type="date" class="input is-rounded is-normal" v-model='endDate' @change='setEndDate'>
                     </div>
                 </div>
 
-                <button class="button is-primary is-medium" @click="getWeather" type="button">Search</button>
+                <button class="button is-primary is-medium" @click="getWeather" type="button" :disabled='location == " " || location == null '>Search</button>
             </form>
         </div>
     
@@ -72,9 +72,7 @@
                 <td>{{ day.visibility }}</td>
             </tr> 
             </tbody>
-            <!-- <tr>
-                <td>{{ weatherRes.days(0) }}</td>
-            </tr> -->
+
         </table>
     </div>
  </div>   
@@ -85,32 +83,47 @@
         Vue.createApp({
             data () {
                 return {
-                   weatherRes : 'Search For data' 
+                   weatherRes : 'Search For data',
+                   location: null,
+                   startDate: null,
+                   endDate: null,
                 }
                 
              },
+
+             created() {
+                 this.getToday()
+             },
+
              methods: {
                  async getWeather() {
                     
-                //      fetch("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/dublin?unitGroup=us&key=HXCDVD9QK7MSSNML24M3NP683&contentType=json", {
-                //     "method": "GET",
-                //     "headers": {
-                //     }
-                //     })
-                //     .then(response => {
-                //     await console.log(response.json())
+                    this.weatherRes = await( await fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/' + this.location +'/' + this.startDate + '/'+ this.endDate +'?unitGroup=uk&key=HXCDVD9QK7MSSNML24M3NP683&contentType=json')).json()
+                },
 
-                //    // console.log(this.weatherRes.json)
-                //     })
-                //     .catch(err => {
-                //     console.error(err);
-                //     });
+                setLocation(e) {
+                    this.location = e.target.value
+                    console.log(this.location)
+                },
 
-                this.weatherRes = await( await fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/dublin?unitGroup=us&key=HXCDVD9QK7MSSNML24M3NP683&contentType=json')).json()
-                //console.log(await this.weatherRes)
-                //console.log(await( await fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/dublin?unitGroup=us&key=HXCDVD9QK7MSSNML24M3NP683&contentType=json')).json())
+                setStartDate(e) {
+                    this.startDate = e.target.value
+                },
+
+                setEndDate(e) {
+                    this.endDate = e.target.value
+                },
+
+                getToday(){
+                    let today = new Date()
+
+                    this.startDate = today.getFullYear()+'-'+'0'+(today.getMonth()+1)+'-'+today.getDate();
+                    this.endDate = today.getFullYear()+'-'+'0'+(today.getMonth()+1)+'-'+today.getDate();
+
+                }
+
+
             }
-             }
 
         }).mount('#app')
         
