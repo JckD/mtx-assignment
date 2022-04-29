@@ -30,6 +30,10 @@
                         <label type="text">Date:</lable>
                         <input type="date" class="input is-rounded is-normal" v-model='startDate' @change='setStartDate' placeholder="Date"> 
                     </div>
+                    <div class="column" >
+                        <label type="text">API Key:</lable>
+                        <input type="text" class="input is-rounded is-normal" v-model='apikey' @change='setApikey' placeholder="API Key for TimeLine Weather API"> 
+                    </div>
 
                 </div>
 
@@ -88,6 +92,7 @@
                    name : null,
                    location: null,
                    startDate: null,
+                   apikey : null,
                 }
                 
              },
@@ -99,7 +104,7 @@
              methods: {
                  async getWeather() {
                     
-                    this.weatherRes = await( await fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/' + this.location +'/' + this.startDate + '/?unitGroup=uk&key=HXCDVD9QK7MSSNML24M3NP683&contentType=json')).json()
+                    this.weatherRes = await( await fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/' + this.location +'/' + this.startDate + '/?unitGroup=uk&key='+ this.apikey + '&contentType=json')).json()
                 },
 
                 setLocation(e) {
@@ -111,7 +116,9 @@
                     this.startDate = e.target.value
                 },
 
-
+                setApikey(e) {
+                    this.apikey = e.target.value
+                },
 
                 getToday(){
                     let today = new Date()
