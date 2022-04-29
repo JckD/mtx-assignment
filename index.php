@@ -18,18 +18,19 @@
         <div class="block">
             <form>
                 <div class="columns">
+                <div class="column">
+                        <label>Name:</lable>
+                        <input type="text" class="input is-rounded is-normal" v-model='name' @change='setName' required placeholder="User Name">
+                    </div>
                     <div class="column">
                         <label>Weather Location:</lable>
-                        <input type="text" class="input is-rounded is-normal" v-model='location' @change='setLocation' required>
+                        <input type="text" class="input is-rounded is-normal" v-model='location' @change='setLocation' required placeholder="Place or lat, lon">
                     </div>
                     <div class="column" >
-                        <label type="text">Start Date:</lable>
-                        <input type="date" class="input is-rounded is-normal" v-model='startDate' @change='setStartDate'> 
+                        <label type="text">Date:</lable>
+                        <input type="date" class="input is-rounded is-normal" v-model='startDate' @change='setStartDate' placeholder="Date"> 
                     </div>
-                    <div class="column">
-                        <label>End Date:</lable>
-                        <input type="date" class="input is-rounded is-normal" v-model='endDate' @change='setEndDate'>
-                    </div>
+
                 </div>
 
                 <button class="button is-primary is-medium" @click="getWeather" type="button" :disabled='location == " " || location == null '>Search</button>
@@ -84,9 +85,9 @@
             data () {
                 return {
                    weatherRes : 'Search For data',
+                   name : null,
                    location: null,
                    startDate: null,
-                   endDate: null,
                 }
                 
              },
@@ -98,7 +99,7 @@
              methods: {
                  async getWeather() {
                     
-                    this.weatherRes = await( await fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/' + this.location +'/' + this.startDate + '/'+ this.endDate +'?unitGroup=uk&key=HXCDVD9QK7MSSNML24M3NP683&contentType=json')).json()
+                    this.weatherRes = await( await fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/' + this.location +'/' + this.startDate + '/?unitGroup=uk&key=HXCDVD9QK7MSSNML24M3NP683&contentType=json')).json()
                 },
 
                 setLocation(e) {
@@ -110,9 +111,7 @@
                     this.startDate = e.target.value
                 },
 
-                setEndDate(e) {
-                    this.endDate = e.target.value
-                },
+
 
                 getToday(){
                     let today = new Date()
