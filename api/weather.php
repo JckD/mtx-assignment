@@ -9,7 +9,7 @@ $id = '';
 $con = mysqli_connect($host, $user, $pw, $dbname);
 
 $method = $_SERVER['REQUEST_METHOD'];
-$request = explode('/', trim($_SERVER['PATH_INFO'], '/'));
+//$request = explode('/', trim($_SERVER['PATH_INFO'], '/'));
 
 
 if(!$con) {
@@ -46,7 +46,13 @@ switch($method) {
                                             ResWindspeed, 
                                             ResVisibility)
                                            values ('$UserName','$SpecifiedDate','$LatLon','$ResDateTime','$ResConditions','$ResDescription','$ResIcon','$ResSunrise','$ResSunset','$ResTempmax','$ResTempmin','$ResDew','$ResHumidity','$ResPressure','$ResWindspeed','$ResVisibility') ";
-    break;
+        break;
+
+    case 'GET':
+        //$id = $_GET['id'];
+        $sql = "SELECT * FROM weather_info";
+        break;
+
 
 }
 
@@ -56,6 +62,16 @@ $result = mysqli_query($con, $sql);
 if(!$result) {
     http_response_code(404);
     die(mysqli_error($con));
+}
+
+
+if($method == 'GET') {
+    echo '[';
+    for ($i = 0; $i<mysqli_num_rows($result) ; $i++) {
+        echo ($i>0?',':'').json_encode(mysqli_fetch_object($result));
+    }
+    echo ']';
+    //echo json_encode($result);
 }
 
 $con->close();

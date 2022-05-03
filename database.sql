@@ -4,7 +4,7 @@ CREATE TABLE weather_info (
     LatLon varchar(30),
     ResDateTime date,
     ResConditions varchar(50),
-    ResDescription varchar(50),
+    ResDescription varchar(1s50),
     ResIcon varchar(50),
     ResSunrise varchar(20),
     ResSunset varchar(20),

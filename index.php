@@ -40,49 +40,99 @@
                 <button class="button is-primary is-medium" @click="getWeather" type="button" :disabled='location == " " || location == null '>Search</button>
             </form>
         </div>
-    
-        <table class="table is-striped is-fullwidth">
-            <thead>
-               <tr>
-                <th>Date/Time</th>
-                <th>Conditions</th>
-                <th>Description</th>
-                <th>Icon</th>
-                <th>Sunrise</th>
-                <th>Sunset</th>
-                <th>Tempmax</th>
-                <th>Tempmin</th>
-                <th>Dew</th>
-                <th>Humidity</th>
-                <th>Pressure</th>
-                <th>Windspeed</th>
-                <th>Visibility</th>
-            </tr> 
-            </thead>
-            
-            <tbody>
-             <tr v-for='day in weatherRes.days'>
-                <td>{{ day.datetime }}</td>
-                <td>{{ day.conditions }}</td>
-                <td>{{ day.description }}</td>
-                <td>{{ day.icon }}</td>
-                <td>{{ day.sunrise }}</td>
-                <td>{{ day.sunset }}</td>
-                <td>{{ day.tempmax }}</td>
-                <td>{{ day.tempmin }}</td>
-                <td>{{ day.dew }}</td>
-                <td>{{ day.humidity }}</td>
-                <td>{{ day.pressure }}</td>
-                <td>{{ day.windspeed }}</td>
-                <td>{{ day.visibility }}</td>
-            </tr> 
-            </tbody>
+        <div class="block">
+            <table class="table is-striped is-fullwidth">
+                <thead>
+                <tr>
+                    <th>Date/Time</th>
+                    <th>Conditions</th>
+                    <th>Description</th>
+                    <th>Icon</th>
+                    <th>Sunrise</th>
+                    <th>Sunset</th>
+                    <th>Tempmax</th>
+                    <th>Tempmin</th>
+                    <th>Dew</th>
+                    <th>Humidity</th>
+                    <th>Pressure</th>
+                    <th>Windspeed</th>
+                    <th>Visibility</th>
+                </tr> 
+                </thead>
+                
+                <tbody>
+                    <tr v-for='day in weatherRes.days'>
+                        <td>{{ day.datetime }}</td>
+                        <td>{{ day.conditions }}</td>
+                        <td>{{ day.description }}</td>
+                        <td>{{ day.icon }}</td>
+                        <td>{{ day.sunrise }}</td>
+                        <td>{{ day.sunset }}</td>
+                        <td>{{ day.tempmax }}</td>
+                        <td>{{ day.tempmin }}</td>
+                        <td>{{ day.dew }}</td>
+                        <td>{{ day.humidity }}</td>
+                        <td>{{ day.pressure }}</td>
+                        <td>{{ day.windspeed }}</td>
+                        <td>{{ day.visibility }}</td>
+                    </tr> 
+                </tbody>
 
-        </table>
-        <button class="button is-primary is-medium" @click="addWeather" type="button">Save Weather Data</button>
+            </table>
+            <button class="button is-primary is-medium" @click="addWeather" type="button">Save Weather Data</button>
+            <br/>
+            <!-- <button class="button is-primary is-medium" @click="getSavedWeather" type="button">Save Weather Data</button> -->
+
+
+        </div>
         
         <div class="block">
             <h2 class="title is-3">Saved Weather Data</h2>
+            <table class="table is-striped is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>UserName</th>
+                        <th>DateSaved</th>
+                        <th>Lat,Lon</th>
+                        <th>Date/Time</th>
+                        <th>Conditions</th>
+                        <th>Desc</th>
+                        <th>Icon</th>
+                        <th>Sunrise</th>
+                        <th>Sunset</th>
+                        <th>Tmax</th>
+                        <th>Tmin</th>
+                        <th>Dew</th>
+                        <th>Humidity</th>
+                        <th>Pressure</th>
+                        <th>Windspeed</th>
+                        <th>Vis</th>
+                        <th>Del</th>
+                    </tr> 
+                </thead>
+
+                <tbody>
+                    <tr v-for='item in savedWeather'>
+                        <td>{{ item.UserName }}</td>
+                        <td>{{ item.SpecifiedDate }}</td>
+                        <td>{{ item.LatLon }}</td>
+                        <td>{{ item.ResDateTime }}</td>
+                        <td>{{ item.ResConditions }}</td>
+                        <td>{{ item.ResDescription }}</td>
+                        <td>{{ item.ResIcon }}</td>
+                        <td>{{ item.ResSunrise }}</td>
+                        <td>{{ item.ResSunset }}</td>
+                        <td>{{ item.ResTempmax }}</td>
+                        <td>{{ item.ResTempmin }}</td>
+                        <td>{{ item.ResDew }}</td>
+                        <td>{{ item.ResHumidity }}</td>
+                        <td>{{ item.ResPressure }}</td>
+                        <td>{{ item.ResWindspeed }}</td>
+                        <td>{{ item.ResVisibility }}</td>
+                        <td><button>Del</button></td>
+                    </tr> 
+                </tbody>
+            </table>
         </div>
     </div>
  </div>   
@@ -98,12 +148,23 @@
                    location: null,
                    startDate: null,
                    apikey : null,
+                   savedWeather: null,
+
                 }
                 
              },
 
-             created() {
-                 this.getToday()
+             mounted: function () {
+                this.getSavedWeather()
+                 console.log(this.savedWeather)
+                this.getToday()
+             },
+
+
+
+
+             watch() {
+
              },
 
              methods: {
@@ -114,7 +175,7 @@
 
                 setLocation(e) {
                     this.location = e.target.value
-                    console.log(this.location)
+                    console.log(this.savedWeather)
                 },
 
                 setStartDate(e) {
@@ -128,18 +189,15 @@
                 getToday(){
                     let today = new Date()
 
-                    this.startDate = today.getFullYear()+'-'+'0'+(today.getMonth()+1)+'-'+today.getDate();
-                    this.endDate = today.getFullYear()+'-'+'0'+(today.getMonth()+1)+'-'+today.getDate();
+                    this.startDate = today.getFullYear()+'-'+'0'+(today.getMonth()+1)+'-'+'0'+today.getDate();
+                    this.endDate = today.getFullYear()+'-'+'0'+(today.getMonth()+1)+'-'+'0'+today.getDate();
 
                 },
 
-                getSavedWeather() {
-                    axios.get('api/weather.php')
-                    .then(function (response) {
-                        console.log(response);
-                    }).catch(function (error) {
-                        console.log(error)
-                    })
+                async getSavedWeather() {
+                    response = await axios.get('api/weather.php')
+                    this.savedWeather = response.data
+                   console.log(this.savedWeather)
                 },
 
                 addWeather() {
