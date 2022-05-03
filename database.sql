@@ -8,12 +8,12 @@ CREATE TABLE weather_info (
     ResIcon varchar(50),
     ResSunrise varchar(20),
     ResSunset varchar(20),
-    ResTempmax float,
-    ResTempMin float,
-    ResDew float,
-    ResHumidity float,
-    ResPressure float,
-    ResWindspeed float,
-    ResVisibility float
+    ResTempmax float(4),
+    ResTempMin float(4),
+    ResDew float(4),
+    ResHumidity float(4),
+    ResPressure float(4),
+    ResWindspeed float(4),
+    ResVisibility float(4)
     
 )

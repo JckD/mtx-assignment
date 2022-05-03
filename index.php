@@ -13,8 +13,8 @@
 <body>
  <div id="app">
     <div class="container">
-        <h1 class="title">Timeline Weather API</h1>
-
+        <h1 class="title is-2">Timeline Weather API</h1>
+        
         <div class="block">
             <form>
                 <div class="columns">
@@ -32,7 +32,7 @@
                     </div>
                     <div class="column" >
                         <label type="text">API Key:</lable>
-                        <input type="text" class="input is-rounded is-normal" v-model='apikey' @change='setApikey' placeholder="API Key for TimeLine Weather API"> 
+                        <input type="text" class="input is-rounded is-normal" v-model='apikey' @change='setApikey' placeholder="API Key for TimeLine Weather API" required> 
                     </div>
 
                 </div>
@@ -79,6 +79,11 @@
             </tbody>
 
         </table>
+        <button class="button is-primary is-medium" @click="addWeather" type="button">Save Weather Data</button>
+        
+        <div class="block">
+            <h2 class="title is-3">Saved Weather Data</h2>
+        </div>
     </div>
  </div>   
 
@@ -126,7 +131,58 @@
                     this.startDate = today.getFullYear()+'-'+'0'+(today.getMonth()+1)+'-'+today.getDate();
                     this.endDate = today.getFullYear()+'-'+'0'+(today.getMonth()+1)+'-'+today.getDate();
 
+                },
+
+                getSavedWeather() {
+                    axios.get('api/weather.php')
+                    .then(function (response) {
+                        console.log(response);
+                    }).catch(function (error) {
+                        console.log(error)
+                    })
+                },
+
+                addWeather() {
+
+                    let formData = new FormData();
+
+                    formData.append('UserName', this.name)
+                    formData.append('SpecifiedDate', this.startDate)
+                    formData.append('LatLon', this.location)
+                    formData.append('ResDateTime', this.weatherRes.days[0].datetime)
+                    formData.append('ResConditions', this.weatherRes.days[0].conditions)
+                    formData.append('ResDescription', this.weatherRes.days[0].description)
+                    formData.append('ResIcon', this.weatherRes.days[0].icon)
+                    formData.append('ResSunrise', this.weatherRes.days[0].sunrise)
+                    formData.append('ResSunset', this.weatherRes.days[0].sunset)
+                    formData.append('ResTempmax', this.weatherRes.days[0].tempmax)
+                    formData.append('ResTempmin', this.weatherRes.days[0].tempmin)
+                    formData.append('ResDew', this.weatherRes.days[0].dew)
+                    formData.append('ResHumidity', this.weatherRes.days[0].humidity)
+                    formData.append('ResPressure', this.weatherRes.days[0].pressure)
+                    formData.append('ResWindspeed', this.weatherRes.days[0].windspeed)
+                    formData.append('ResVisibility', this.weatherRes.days[0].visibility)
+
+                    console.log(formData)
+                    let weatherData = {};
+                    formData.forEach(function(value, key){
+                        weatherData[key] = value;
+                    })
+
+                    axios({
+                        method:'post',
+                        url: 'api/weather.php',
+                        data: formData,
+                        config : { headers: {'Content-Type': 'multipart/form-data'}}
+                    })
+                    .then(function (response) {
+                        console.log(response)
+                    }).catch(function(error) {
+                        console.log(response)
+                    })
+                    
                 }
+
 
 
             }
