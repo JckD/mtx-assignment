@@ -129,7 +129,7 @@
                         <td>{{ item.ResPressure }}</td>
                         <td>{{ item.ResWindspeed }}</td>
                         <td>{{ item.ResVisibility }}</td>
-                        <td><button>Del</button></td>
+                        <td><button class="button is-danger" @click="deleteWeather(item.id)">Del</button></td>
                     </tr> 
                 </tbody>
             </table>
@@ -198,6 +198,11 @@
                     response = await axios.get('api/weather.php')
                     this.savedWeather = response.data
                    console.log(this.savedWeather)
+                },
+
+                deleteWeather(id) {
+
+                    axios.delete('api/weather.php/?id='+id);
                 },
 
                 addWeather() {

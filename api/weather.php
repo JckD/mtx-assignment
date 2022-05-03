@@ -4,7 +4,7 @@ $host = "localhost";
 $user = "JD";
 $pw = '21stCentury';
 $dbname = 'timelineweather';
-$id = '';
+
 
 $con = mysqli_connect($host, $user, $pw, $dbname);
 
@@ -15,6 +15,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 if(!$con) {
     die("Connection failed: " .mysqli_connect_error());
 }
+
 
 
 switch($method) {
@@ -49,11 +50,16 @@ switch($method) {
         break;
 
     case 'GET':
-        //$id = $_GET['id'];
+        
         $sql = "SELECT * FROM weather_info";
         break;
 
 
+    case 'DELETE':
+       $id = $_GET['id'];
+
+        $sql = 'DELETE FROM weather_info WHERE id ="'. $id. '"';
+        break;
 }
 
 //run SQL statement
