@@ -148,7 +148,7 @@
                    location: null,
                    startDate: null,
                    apikey : null,
-                   savedWeather: null,
+                   savedWeather: '',
 
                 }
                 
@@ -171,6 +171,7 @@
                  async getWeather() {
                     
                     this.weatherRes = await( await fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/' + this.location +'/' + this.startDate + '/?unitGroup=uk&key='+ this.apikey + '&contentType=json')).json()
+                   
                 },
 
                 setLocation(e) {
@@ -202,7 +203,9 @@
 
                 deleteWeather(id) {
 
-                    axios.delete('api/weather.php/?id='+id);
+                    axios.delete('api/weather.php/?id='+id)
+                    .then((res)=> {this.getSavedWeather()});
+                    
                 },
 
                 addWeather() {
@@ -238,11 +241,12 @@
                         data: formData,
                         config : { headers: {'Content-Type': 'multipart/form-data'}}
                     })
-                    .then(function (response) {
-                        console.log(response)
+                    .then((response) =>{
+                        this.getSavedWeather()
                     }).catch(function(error) {
                         console.log(response)
                     })
+                    
                     
                 }
 
