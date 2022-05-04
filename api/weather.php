@@ -59,7 +59,7 @@ switch($method) {
                                                             $ResTempmax,
                                                             $ResTempmin, 
                                                             $ResDew,
-                                                            $ResHumiity,
+                                                            $ResHumidity,
                                                             $ResPressure, 
                                                             $ResWindspeed,
                                                             $ResVisibility );

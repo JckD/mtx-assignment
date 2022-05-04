@@ -30,6 +30,7 @@
                     </tr> 
                 </thead>
                 <tbody>
+                <transition-group  name="fade">
                     <tr v-for='item in content'>
                         <td>{{ item.UserName }}</td>
                         <td>{{ item.SpecifiedDate }}</td>
@@ -49,6 +50,8 @@
                         <td>{{ item.ResVisibility }}</td>
                         <td><button class="button is-danger" @click="deleteRow(item.id)">Del</button></td>
                     </tr> 
+                </transition-group>
+                    
                 </tbody>
             </table>
 
