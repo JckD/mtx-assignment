@@ -1,8 +1,8 @@
 <?php 
 
 $host = "localhost";
-$user = "JD";
-$pw = '21stCentury';
+$user = "root";
+$pw = 'admin';
 $dbname = 'timelineweather';
 
 

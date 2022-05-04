@@ -77,10 +77,12 @@
                 </table>
                 <button class="button is-primary is-medium" @click="addWeather" type="button">Save Weather Data</button>
                 <br/>
+                
             </div>
             <div class="block">
                 <h2 class="title is-3">Saved Weather Data</h2>
-                <table class="table is-striped is-fullwidth">
+                <saved-table :content="savedWeather" @delete-row='deleteWeather'></saved-table>
+                <!-- <table class="table is-striped is-fullwidth">
                     <thead>
                         <tr>
                             <th>UserName</th>
@@ -123,13 +125,18 @@
                             <td><button class="button is-danger" @click="deleteWeather(item.id)">Del</button></td>
                         </tr> 
                     </tbody>
-                </table>
+                </table> -->
             </div>
         </div>
     </div>     
 
-        <script>
+        <script type="module">
+            import SavedTable from './components/SavedTable.js'
+
             Vue.createApp({
+                components: {
+                    SavedTable
+                },
                 data () {
                     return {
                         weatherRes : 'Search For data',
@@ -137,7 +144,7 @@
                         location: '',
                         startDate: '',
                         apikey : '',
-                        savedWeather: '',
+                        savedWeather: [],
                     }        
                 },
 
@@ -160,14 +167,14 @@
                     },
 
                     async getSavedWeather() {
-                        response = await axios.get('api/weather.php')
+                        let response = await axios.get('api/weather.php')
                         this.savedWeather = response.data
                     },
 
                     deleteWeather(id) {
-
+                        console.log(id)
                         axios.delete('api/weather.php/?id='+id)
-                        .then((res)=> {this.getSavedWeather()});      
+                        .then((res)=> {this.getSavedWeather()});
                     },
 
                     addWeather() {
