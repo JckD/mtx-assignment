@@ -132,13 +132,12 @@
             Vue.createApp({
                 data () {
                     return {
-                    weatherRes : 'Search For data',
-                    name : '',
-                    location: '',
-                    startDate: '',
-                    apikey : '',
-                    savedWeather: '',
-
+                        weatherRes : 'Search For data',
+                        name : '',
+                        location: '',
+                        startDate: '',
+                        apikey : '',
+                        savedWeather: '',
                     }        
                 },
 
@@ -153,13 +152,11 @@
                         this.weatherRes = await( await fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/' + this.location +'/' + this.startDate + '/?unitGroup=uk&key='+ this.apikey + '&contentType=json')).json() 
                     },
 
-
                     getToday(){
                         let today = new Date()
 
                         this.startDate = today.getFullYear()+'-'+'0'+(today.getMonth()+1)+'-'+'0'+today.getDate();
                         this.endDate = today.getFullYear()+'-'+'0'+(today.getMonth()+1)+'-'+'0'+today.getDate();
-
                     },
 
                     async getSavedWeather() {
@@ -170,8 +167,7 @@
                     deleteWeather(id) {
 
                         axios.delete('api/weather.php/?id='+id)
-                        .then((res)=> {this.getSavedWeather()});
-                        
+                        .then((res)=> {this.getSavedWeather()});      
                     },
 
                     addWeather() {
@@ -194,8 +190,6 @@
                         formData.append('ResPressure', this.weatherRes.days[0].pressure)
                         formData.append('ResWindspeed', this.weatherRes.days[0].windspeed)
                         formData.append('ResVisibility', this.weatherRes.days[0].visibility)
-
-
 
                         axios({
                             method:'post',
