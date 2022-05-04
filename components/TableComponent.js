@@ -3,23 +3,18 @@
         emits: ['deleteRow'],
         props: {
             content: Array,
-            
+            cols: Array,
         },
 
-        
-
-        data () {
-            return {
-              
-            }
-        },
 
         methods : {
-            deleteRow(id) {
 
-                // axios.delete('api/weather.php/?id='+id)
-                // .then((res)=> {this.getSavedWeather()});
-                
+            /*
+                deleteRow function
+                emits a deleteRow event with the Row ID
+                to the parent function to delete the row
+            */
+            deleteRow(id) {           
                 this.$emit('deleteRow', id);
             }
         },
@@ -29,23 +24,9 @@
             <table class="table is-striped is-fullwidth">
                 <thead>
                     <tr>
-                        <th>UserName</th>
-                        <th>DateSaved</th>
-                        <th>Lat,Lon</th>
-                        <th>Date/Time</th>
-                        <th>Conditions</th>
-                        <th>Desc</th>
-                        <th>Icon</th>
-                        <th>Sunrise</th>
-                        <th>Sunset</th>
-                        <th>Tmax</th>
-                        <th>Tmin</th>
-                        <th>Dew</th>
-                        <th>Humidity</th>
-                        <th>Pressure</th>
-                        <th>Windspeed</th>
-                        <th>Vis</th>
-                        <th>Del</th>
+                       <th v-for= 'key in cols'>
+                        {{ key }}
+                       </th>
                     </tr> 
                 </thead>
                 <tbody>

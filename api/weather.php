@@ -5,19 +5,19 @@ $user = "root";
 $pw = 'admin';
 $dbname = 'timelineweather';
 
-
+//Connect to DB
 $con = mysqli_connect($host, $user, $pw, $dbname);
 
+//Get request method
 $method = $_SERVER['REQUEST_METHOD'];
-//$request = explode('/', trim($_SERVER['PATH_INFO'], '/'));
 
-
+//Close connection if failed
 if(!$con) {
     die("Connection failed: " .mysqli_connect_error());
 }
 
 
-
+//Switch case for requested method
 switch($method) {
     case 'POST':
         $UserName = $_POST["UserName"];
@@ -56,7 +56,8 @@ switch($method) {
 
 
     case 'DELETE':
-       $id = $_GET['id'];
+        //get id from delete request URL 
+        $id = $_GET['id'];
 
         $sql = 'DELETE FROM weather_info WHERE id ="'. $id. '"';
         break;
@@ -71,6 +72,7 @@ if(!$result) {
 }
 
 
+// if method is get Echo the result
 if($method == 'GET') {
     echo '[';
     for ($i = 0; $i<mysqli_num_rows($result) ; $i++) {

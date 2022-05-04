@@ -81,61 +81,17 @@
             </div>
             <div class="block">
                 <h2 class="title is-3">Saved Weather Data</h2>
-                <saved-table :content="savedWeather" @delete-row='deleteWeather'></saved-table>
-                <!-- <table class="table is-striped is-fullwidth">
-                    <thead>
-                        <tr>
-                            <th>UserName</th>
-                            <th>DateSaved</th>
-                            <th>Lat,Lon</th>
-                            <th>Date/Time</th>
-                            <th>Conditions</th>
-                            <th>Desc</th>
-                            <th>Icon</th>
-                            <th>Sunrise</th>
-                            <th>Sunset</th>
-                            <th>Tmax</th>
-                            <th>Tmin</th>
-                            <th>Dew</th>
-                            <th>Humidity</th>
-                            <th>Pressure</th>
-                            <th>Windspeed</th>
-                            <th>Vis</th>
-                            <th>Del</th>
-                        </tr> 
-                    </thead>
-                    <tbody>
-                        <tr v-for='item in savedWeather'>
-                            <td>{{ item.UserName }}</td>
-                            <td>{{ item.SpecifiedDate }}</td>
-                            <td>{{ item.LatLon }}</td>
-                            <td>{{ item.ResDateTime }}</td>
-                            <td>{{ item.ResConditions }}</td>
-                            <td>{{ item.ResDescription }}</td>
-                            <td>{{ item.ResIcon }}</td>
-                            <td>{{ item.ResSunrise }}</td>
-                            <td>{{ item.ResSunset }}</td>
-                            <td>{{ item.ResTempmax }}</td>
-                            <td>{{ item.ResTempmin }}</td>
-                            <td>{{ item.ResDew }}</td>
-                            <td>{{ item.ResHumidity }}</td>
-                            <td>{{ item.ResPressure }}</td>
-                            <td>{{ item.ResWindspeed }}</td>
-                            <td>{{ item.ResVisibility }}</td>
-                            <td><button class="button is-danger" @click="deleteWeather(item.id)">Del</button></td>
-                        </tr> 
-                    </tbody>
-                </table> -->
+                <table-component :content="savedWeather" :cols="savedWeatherCols" @delete-row='deleteWeather'></table-copmonent>
             </div>
         </div>
     </div>     
 
         <script type="module">
-            import SavedTable from './components/SavedTable.js'
+            import TableComponent from './components/TableComponent.js'
 
             Vue.createApp({
                 components: {
-                    SavedTable
+                    TableComponent
                 },
                 data () {
                     return {
@@ -145,38 +101,73 @@
                         startDate: '',
                         apikey : '',
                         savedWeather: [],
+                        savedWeatherCols : ['UserName', 'DateSaved', 'Lat,Lon', 'Date/Time', 'Conditions', 'Desc', 'Icon', 'Sunrise', 'Sunset','Tmax','Tmin','Dew','Humidity','Pressure','Winspeed','Vis','Del']
                     }        
                 },
 
                 mounted: function () {
+                    //Get previously saved weather
                     this.getSavedWeather()
+                    //Get today's date to fill the date field by default
                     this.getToday()
                 },
 
                 methods: {
+
+                    /*
+                        getWeather function
+                        Fetches weather information from Timeline Weather API
+                        Takes this.location, this.startDate and this.apikey for the fetch url
+                        Gets the JSON response and set's it to this.weatherRes 
+                    */
                     async getWeather() {
-                        
                         this.weatherRes = await( await fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/' + this.location +'/' + this.startDate + '/?unitGroup=uk&key='+ this.apikey + '&contentType=json')).json() 
                     },
 
+
+                    /*
+                        getToday function
+                        Called when component is mounted to create a new date Obj
+                        creates correct string format for yyy-mm-dd
+                        sets result to this.startdate
+                    
+                    */
                     getToday(){
                         let today = new Date()
 
                         this.startDate = today.getFullYear()+'-'+'0'+(today.getMonth()+1)+'-'+'0'+today.getDate();
-                        this.endDate = today.getFullYear()+'-'+'0'+(today.getMonth()+1)+'-'+'0'+today.getDate();
+                        //this.endDate = today.getFullYear()+'-'+'0'+(today.getMonth()+1)+'-'+'0'+today.getDate();
                     },
 
+                    /*
+                        getSavedWeather function
+                        Queries the PHP api to get the saved weather data in the MySQL DB
+                        saves the response data to this.saved weather
+                    */
                     async getSavedWeather() {
                         let response = await axios.get('api/weather.php')
                         this.savedWeather = response.data
                     },
 
+                    /*
+                        deleteWeather function
+                        called on button press for each row
+                        using the ID in the delete request url
+                        then updates the table by calling this.getSavedWeather()
+                    */
                     deleteWeather(id) {
                         console.log(id)
                         axios.delete('api/weather.php/?id='+id)
                         .then((res)=> {this.getSavedWeather()});
                     },
 
+                    /*
+                        addWeather function
+                        Creates a new form Obj and appends all the user input
+                        and weather data that the user wants to save
+                        then sends a post request to the PHP API and
+                        calls this.getSavedWeather() to update the table component
+                    */
                     addWeather() {
 
                         let formData = new FormData();
