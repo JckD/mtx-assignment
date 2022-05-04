@@ -156,7 +156,7 @@
                         then updates the table by calling this.getSavedWeather()
                     */
                     deleteWeather(id) {
-                        console.log(id)
+
                         axios.delete('api/weather.php/?id='+id)
                         .then((res)=> {this.getSavedWeather()});
                     },

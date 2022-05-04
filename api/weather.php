@@ -46,7 +46,25 @@ switch($method) {
                                             ResPressure,
                                             ResWindspeed, 
                                             ResVisibility)
-                                           values ('$UserName','$SpecifiedDate','$LatLon','$ResDateTime','$ResConditions','$ResDescription','$ResIcon','$ResSunrise','$ResSunset','$ResTempmax','$ResTempmin','$ResDew','$ResHumidity','$ResPressure','$ResWindspeed','$ResVisibility') ";
+                                           values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
+        $prep = $con->prepare($sql);
+        
+        $prep->bind_param("ssssssssssssssss", $UserName , $SpecifiedDate, $SpecifiedDate,
+                                                            $ResDateTime,
+                                                            $ResCondition,
+                                                            $ResDescription,
+                                                            $ResIcon,
+                                                            $ResSunrie,
+                                                            $ResSunset,
+                                                            $ResTempmax,
+                                                            $ResTempmin, 
+                                                            $ResDew,
+                                                            $ResHumiity,
+                                                            $ResPressure, 
+                                                            $ResWindspeed,
+                                                            $ResVisibility );
+
+        
         break;
 
     case 'GET':
@@ -64,12 +82,21 @@ switch($method) {
 }
 
 //run SQL statement
-$result = mysqli_query($con, $sql);
+if($method == 'POST') {
+    $prep->execute();
 
-if(!$result) {
-    http_response_code(404);
-    die(mysqli_error($con));
+    http_response_code(200);
+} else {
+    $result = mysqli_query($con, $sql);
+
+    if(!$result) {
+
+        die(mysqli_error($con));
+    }
 }
+
+
+
 
 
 // if method is get Echo the result
